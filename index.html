@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avinash Reddy — Aerospace Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Syne:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void: #04060d;
+    --deep: #080d1a;
+    --panel: #0d1426;
+    --surface: #111c33;
+    --rim: #162040;
+    --accent: #00d4ff;
+    --pulse: #0099cc;
+    --hot: #ff6b35;
+    --warm: #ffaa00;
+    --text: #c8daf0;
+    --dim: #6e8aab;
+    --faint: #2a3d5c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--void);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ─── STARFIELD ─── */
+  #stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: white;
+    animation: twinkle var(--d,3s) infinite alternate ease-in-out;
+  }
+  @keyframes twinkle { from { opacity: var(--lo,.1); } to { opacity: var(--hi,.6); } }
+
+  /* ─── GRID OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 48px;
+    background: rgba(4,6,13,.8);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(0,212,255,.12);
+  }
+  .nav-logo {
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: .15em;
+    text-transform: uppercase;
+  }
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--dim);
+    text-decoration: none;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    transition: color .25s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -3px; left: 0; right: 100%;
+    height: 1px;
+    background: var(--accent);
+    transition: right .25s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-links a:hover::after { right: 0; }
+
+  /* ─── SECTIONS ─── */
+  section { position: relative; z-index: 1; }
+
+  /* ─── HERO ─── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 48px 80px;
+    overflow: hidden;
+  }
+  .hero-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 80px;
+    align-items: center;
+  }
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeUp .7s .2s forwards;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 32px; height: 1px;
+    background: var(--accent);
+  }
+  .hero-name {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -.01em;
+    color: #fff;
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp .7s .35s forwards;
+  }
+  .hero-name span { color: var(--accent); }
+  .hero-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(12px, 1.6vw, 17px);
+    font-weight: 400;
+    color: var(--dim);
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp .7s .45s forwards;
+  }
+  .hero-bio {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--text);
+    max-width: 540px;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp .7s .55s forwards;
+  }
+  .hero-cta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp .7s .65s forwards;
+  }
+  .btn-primary {
+    padding: 13px 32px;
+    background: var(--accent);
+    color: var(--void);
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    clip-path: polygon(8px 0%,100% 0%,100% calc(100% - 8px),calc(100% - 8px) 100%,0% 100%,0% 8px);
+    transition: background .25s, transform .2s;
+  }
+  .btn-primary:hover { background: #33deff; transform: translateY(-2px); }
+  .btn-outline {
+    padding: 13px 32px;
+    background: transparent;
+    color: var(--accent);
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid rgba(0,212,255,.4);
+    cursor: pointer;
+    clip-path: polygon(8px 0%,100% 0%,100% calc(100% - 8px),calc(100% - 8px) 100%,0% 100%,0% 8px);
+    transition: border-color .25s, background .25s, transform .2s;
+  }
+  .btn-outline:hover { border-color: var(--accent); background: rgba(0,212,255,.08); transform: translateY(-2px); }
+
+  /* Orbital diagram */
+  .hero-visual {
+    position: relative;
+    opacity: 0;
+    animation: fadeIn 1s .5s forwards;
+  }
+  .orbital-ring {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    margin: 0 auto;
+  }
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+  }
+  .ring-1 { width: 320px; height: 320px; border-color: rgba(0,212,255,.12); }
+  .ring-2 { width: 240px; height: 240px; border-color: rgba(0,212,255,.2); animation: spin 18s linear infinite; }
+  .ring-3 { width: 160px; height: 160px; border-color: rgba(0,212,255,.3); animation: spin 10s linear infinite reverse; }
+  .ring-4 { width: 80px; height: 80px; border-color: rgba(0,212,255,.5); background: rgba(0,212,255,.06); }
+  .ring-dot {
+    position: absolute;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+    top: -5px; left: 50%;
+    transform: translateX(-50%);
+  }
+  .ring-dot-2 {
+    background: var(--hot);
+    box-shadow: 0 0 12px var(--hot);
+    top: auto; bottom: -5px;
+  }
+  .center-core {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,212,255,.6), rgba(0,212,255,.1));
+    box-shadow: 0 0 30px rgba(0,212,255,.4);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .center-core::after {
+    content: '✈';
+    font-size: 20px;
+    color: white;
+  }
+  @keyframes spin { from { transform: translate(-50%,-50%) rotate(0deg); } to { transform: translate(-50%,-50%) rotate(360deg); } }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .stat-card {
+    background: var(--panel);
+    border: 1px solid var(--faint);
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--accent);
+  }
+  .stat-val {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .stat-lbl {
+    font-size: 10px;
+    color: var(--dim);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  @keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: none; } }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+  /* ─── SECTION HEADER ─── */
+  .sec-head {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+  .sec-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 12px;
+  }
+  .sec-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(24px, 3.5vw, 40px);
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -.01em;
+  }
+  .sec-title span { color: var(--accent); }
+  .sec-rule {
+    width: 60px; height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    margin: 20px auto 0;
+  }
+
+  /* ─── ABOUT ─── */
+  #about { padding: 120px 48px; }
+  .about-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+  .about-text p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+  .about-text p strong { color: var(--accent); }
+  .interests-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+  }
+  .interests-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .interests-list li::before {
+    content: '▸';
+    color: var(--accent);
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+  .edu-card {
+    background: var(--panel);
+    border: 1px solid var(--faint);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .edu-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--hot));
+  }
+  .edu-badge {
+    display: inline-block;
+    background: rgba(0,212,255,.1);
+    border: 1px solid rgba(0,212,255,.3);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .1em;
+    padding: 4px 12px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .edu-school {
+    font-family: 'Orbitron', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .edu-degree {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .edu-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--dim);
+    margin-bottom: 20px;
+  }
+  .cgpa {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .cgpa-val {
+    font-family: 'Orbitron', monospace;
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--warm);
+  }
+  .cgpa-denom { font-size: 16px; color: var(--dim); }
+  .cgpa-lbl { font-size: 12px; color: var(--dim); text-transform: uppercase; letter-spacing: .1em; }
+  .course-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .course-tag {
+    background: var(--surface);
+    border: 1px solid var(--faint);
+    color: var(--dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 5px 12px;
+    letter-spacing: .05em;
+  }
+
+  /* ─── SKILLS ─── */
+  #skills { padding: 120px 48px; background: var(--deep); }
+  .skills-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .skill-group {
+    background: var(--panel);
+    border: 1px solid var(--faint);
+    padding: 28px;
+    position: relative;
+    transition: border-color .3s, transform .3s;
+  }
+  .skill-group:hover { border-color: rgba(0,212,255,.4); transform: translateY(-4px); }
+  .skill-group-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .skill-group-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--faint);
+  }
+  .skill-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .skill-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    box-shadow: 0 0 6px var(--accent);
+  }
+  .skill-name { font-size: 13px; color: var(--text); }
+
+  /* ─── PROJECTS ─── */
+  #projects { padding: 120px 48px; }
+  .projects-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .project-card {
+    background: var(--panel);
+    border: 1px solid var(--faint);
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    overflow: hidden;
+    transition: border-color .3s;
+    position: relative;
+  }
+  .project-card:hover { border-color: rgba(0,212,255,.4); }
+  .project-card.ongoing { border-left: 3px solid var(--hot); }
+  .project-card.done { border-left: 3px solid var(--accent); }
+  .project-num {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 28px 0;
+    font-family: 'Orbitron', monospace;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--faint);
+  }
+  .project-body { padding: 28px 32px 28px 0; }
+  .project-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .project-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border: 1px solid;
+  }
+  .status-ongoing { color: var(--hot); border-color: var(--hot); background: rgba(255,107,53,.08); }
+  .status-done { color: var(--accent); border-color: var(--accent); background: rgba(0,212,255,.06); }
+  .project-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--dim);
+  }
+  .project-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+  .project-points {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .project-points li {
+    font-size: 13px;
+    color: var(--dim);
+    line-height: 1.6;
+    display: flex;
+    gap: 10px;
+  }
+  .project-points li::before {
+    content: '›';
+    color: var(--accent);
+    flex-shrink: 0;
+    line-height: 1.6;
+  }
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .project-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--dim);
+    background: var(--surface);
+    border: 1px solid var(--faint);
+    padding: 3px 10px;
+    letter-spacing: .08em;
+  }
+
+  /* ─── ACTIVITIES ─── */
+  #activities { padding: 120px 48px; background: var(--deep); }
+  .activities-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .activity-card {
+    background: var(--panel);
+    border: 1px solid var(--faint);
+    padding: 28px;
+    transition: border-color .3s, transform .3s;
+  }
+  .activity-card:hover { border-color: rgba(0,212,255,.4); transform: translateY(-4px); }
+  .activity-icon {
+    font-size: 28px;
+    margin-bottom: 16px;
+  }
+  .activity-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .activity-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .activity-desc {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--dim);
+  }
+
+  /* ─── CERTIFICATIONS ─── */
+  #certifications { padding: 120px 48px; }
+  .certs-grid {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .cert-card {
+    background: var(--panel);
+    border: 1px solid var(--faint);
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    transition: border-color .3s;
+  }
+  .cert-card:hover { border-color: rgba(0,212,255,.4); }
+  .cert-icon-wrap {
+    width: 48px; height: 48px;
+    border: 1px solid rgba(0,212,255,.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    background: rgba(0,212,255,.06);
+  }
+  .cert-info { flex: 1; }
+  .cert-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .cert-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--dim);
+  }
+  .cert-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--warm);
+    border: 1px solid var(--warm);
+    padding: 3px 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+
+  /* ─── CONTACT ─── */
+  #contact { padding: 120px 48px; background: var(--deep); }
+  .contact-inner {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .contact-inner p {
+    font-size: 16px;
+    color: var(--dim);
+    line-height: 1.7;
+    margin-bottom: 48px;
+  }
+  .contact-links {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    background: var(--panel);
+    border: 1px solid var(--faint);
+    color: var(--text);
+    text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    transition: border-color .3s, color .3s, transform .2s;
+  }
+  .contact-link:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+  .contact-link .icon { font-size: 16px; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    padding: 28px 48px;
+    border-top: 1px solid var(--faint);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+  }
+  .footer-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    color: var(--dim);
+  }
+  .footer-note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--faint);
+  }
+
+  /* ─── SCANLINE ─── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.015) 2px, rgba(0,0,0,.015) 4px);
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { gap: 20px; }
+    #hero { padding: 100px 24px 60px; }
+    .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+    .hero-visual { display: none; }
+    #about { padding: 80px 24px; }
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    #skills { padding: 80px 24px; }
+    .skills-grid { grid-template-columns: 1fr 1fr; }
+    #projects { padding: 80px 24px; }
+    .project-card { grid-template-columns: 50px 1fr; }
+    .project-num { font-size: 20px; }
+    #activities { padding: 80px 24px; }
+    .activities-grid { grid-template-columns: 1fr; }
+    #certifications { padding: 80px 24px; }
+    #contact { padding: 80px 24px; }
+    footer { flex-direction: column; gap: 8px; text-align: center; }
+  }
+  @media (max-width: 600px) {
+    .skills-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">MAR // Aero</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#activities">Activities</a></li>
+    <li><a href="#certifications">Certs</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">Aerospace Engineer — Hyderabad, India</div>
+      <h1 class="hero-name">Madireddy<br><span>Avinash Reddy</span></h1>
+      <div class="hero-title">CFD · Compressible Flow · Aerodynamics</div>
+      <p class="hero-bio">
+        Aerospace engineering undergraduate with a strong inclination towards aerodynamics, propulsion and computational fluid dynamics. Experienced in supersonic airfoil analysis, external aerodynamics, and flow simulation using ANSYS and CATIA. Aspiring to work in computational aerodynamics and physics-based aerodynamic design.
+      </p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn-primary">View Projects</a>
+        <a href="#contact" class="btn-outline">Get in Touch</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="orbital-ring">
+        <div class="ring ring-1"></div>
+        <div class="ring ring-2"><div class="ring-dot"></div></div>
+        <div class="ring ring-3"><div class="ring-dot ring-dot-2"></div></div>
+        <div class="ring ring-4"></div>
+        <div class="center-core"></div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-val">8.84</div>
+          <div class="stat-lbl">CGPA / 10</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">4+</div>
+          <div class="stat-lbl">CFD Projects</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">M3.0</div>
+          <div class="stat-lbl">Max Mach Sim</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">3+</div>
+          <div class="stat-lbl">Certifications</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="sec-head">
+    <span class="sec-tag">// 01</span>
+    <h2 class="sec-title">About <span>Me</span></h2>
+    <div class="sec-rule"></div>
+  </div>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>I'm an aerospace engineering undergraduate at <strong>SRM Institute of Science and Technology</strong>, specialising in computational fluid dynamics and high-speed aerodynamics. My work spans 2D/3D CFD simulation, structural analysis, and propulsion modelling.</p>
+      <p>I've applied turbulence models, density-based solvers, and mesh refinement techniques to study phenomena ranging from <strong>supersonic oblique shocks</strong> over diamond airfoils to <strong>wing-sail aerodynamics</strong> for marine propulsion. I'm also proficient in structural testing and hand-layup composite fabrication.</p>
+      <p><strong>Research Interests:</strong></p>
+      <ul class="interests-list">
+        <li>Computational Fluid Dynamics</li>
+        <li>Compressible and High-Speed Aerodynamics</li>
+        <li>Aerodynamic Performance Optimization</li>
+        <li>Sustainable & Wind-Assisted Propulsion Systems</li>
+      </ul>
+    </div>
+    <div>
+      <div class="edu-card">
+        <div class="edu-badge">Education</div>
+        <div class="edu-school">SRM Institute of Science &amp; Technology</div>
+        <div class="edu-degree">B.Tech — Aerospace Engineering</div>
+        <div class="edu-meta">August 2023 – May 2027 · Chennai, Tamil Nadu</div>
+        <div class="cgpa">
+          <span class="cgpa-val">8.84</span>
+          <span class="cgpa-denom">/10</span>
+          <span class="cgpa-lbl">CGPA</span>
+        </div>
+        <div class="course-tags">
+          <span class="course-tag">Fluid Mechanics</span>
+          <span class="course-tag">Compressible Aero</span>
+          <span class="course-tag">CFD &amp; Heat Transfer</span>
+          <span class="course-tag">Industrial Aero</span>
+          <span class="course-tag">Air Breathing Propulsion</span>
+          <span class="course-tag">Rocket Propulsion</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="sec-head">
+    <span class="sec-tag">// 02</span>
+    <h2 class="sec-title">Technical <span>Skills</span></h2>
+    <div class="sec-rule"></div>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-group">
+      <div class="skill-group-title">CFD & Simulation</div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">ANSYS Fluent</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">ANSYS CFX</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">ANSYS Discovery</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">ANSYS Workbench</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">Static Structural</span></div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">CAD & Design</div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">CATIA V5</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">Fusion 360</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">ANSYS DesignModeler</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">AutoCAD</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">FreeCAD</span></div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Aero & Propulsion</div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">XFLR5</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">OpenRocket</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">OpenMotor</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">RPA (Rocket Propulsion Analysis)</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">NASA CEA</span></div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Programming</div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">Python</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">MATLAB</span></div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Methods & Analysis</div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">k–ω SST Turbulence Model</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">Density-Based Solvers</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">Mesh Refinement</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">Shock-Expansion Theory</span></div>
+      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">Hand Layup (GFRP)</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="sec-head">
+    <span class="sec-tag">// 03</span>
+    <h2 class="sec-title">Research <span>Projects</span></h2>
+    <div class="sec-rule"></div>
+  </div>
+  <div class="projects-container">
+
+    <div class="project-card ongoing">
+      <div class="project-num">01</div>
+      <div class="project-body">
+        <div class="project-meta">
+          <span class="project-status status-ongoing">Ongoing</span>
+          <span class="project-date">Jan – Apr 2026</span>
+        </div>
+        <div class="project-title">Aerodynamic Performance of 2D Rigid Airfoil Sail for Wind-Assisted Ship Propulsion</div>
+        <ul class="project-points">
+          <li>Conducting 2D steady-state CFD simulations to evaluate aerodynamic performance of a rigid wing-sail under varying apparent wind angles.</li>
+          <li>Investigating lift-to-drag characteristics for thrust generation in auxiliary marine propulsion.</li>
+          <li>Comparing turbulence models (k–ω SST and standard k–ε) to analyze sensitivity of aerodynamic coefficient prediction.</li>
+          <li>Applying mesh refinement near leading-edge and separation regions for improved boundary-layer resolution.</li>
+          <li>Validating CFD results with XFLR5 analysis for lift coefficient trend consistency.</li>
+          <li>Studying Reynolds number regimes representative of realistic marine operating conditions.</li>
+        </ul>
+        <div class="project-tags">
+          <span class="project-tag">ANSYS Fluent</span>
+          <span class="project-tag">k–ω SST</span>
+          <span class="project-tag">k–ε</span>
+          <span class="project-tag">XFLR5</span>
+          <span class="project-tag">Marine Propulsion</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card done">
+      <div class="project-num">02</div>
+      <div class="project-body">
+        <div class="project-meta">
+          <span class="project-status status-done">Completed</span>
+          <span class="project-date">Sep – Nov 2025</span>
+        </div>
+        <div class="project-title">Analysis of Supersonic Flow over a 2D Diamond Airfoil</div>
+        <ul class="project-points">
+          <li>Modelled symmetric double-wedge airfoil geometry with half edge angle of 10° for compressible flow analysis using CATIA.</li>
+          <li>Performed 2D computational simulations for Mach 1.5–3.0 using density-based solver and k–ω SST turbulence model.</li>
+          <li>Analyzed oblique shock and expansion fan formation, shock-angle variation, and pressure coefficient distribution.</li>
+          <li>Evaluated lift and wave-drag trends across 0°–10° angle of attack.</li>
+          <li>Compared numerical results with classical shock-expansion theory.</li>
+        </ul>
+        <div class="project-tags">
+          <span class="project-tag">ANSYS Fluent</span>
+          <span class="project-tag">Mach 1.5–3.0</span>
+          <span class="project-tag">Oblique Shocks</span>
+          <span class="project-tag">CATIA V5</span>
+          <span class="project-tag">Compressible Flow</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card done">
+      <div class="project-num">03</div>
+      <div class="project-body">
+        <div class="project-meta">
+          <span class="project-status status-done">Completed</span>
+          <span class="project-date">May 2025</span>
+        </div>
+        <div class="project-title">Aerodynamic Analysis of a Race Car Rear Spoiler</div>
+        <ul class="project-points">
+          <li>Designed a 3D CAD model of a rear spoiler using CATIA V5 based on automotive aerodynamic design considerations.</li>
+          <li>Conducted aerodynamic evaluation of NACA 5-series rear spoiler at Reynolds number ~3×10⁶ using ANSYS Discovery.</li>
+          <li>Achieved maximum C<sub>L</sub> = 0.35 at 15° AoA, with peak aerodynamic efficiency (C<sub>L</sub>/C<sub>D</sub> ≈ 3.1) at 11° AoA.</li>
+          <li>Investigated flow separation patterns and pressure distribution across varying angles of attack.</li>
+          <li>Evaluated lift (downforce) and drag characteristics; analysed wake structure and aerodynamic efficiency.</li>
+        </ul>
+        <div class="project-tags">
+          <span class="project-tag">ANSYS Discovery</span>
+          <span class="project-tag">CATIA V5</span>
+          <span class="project-tag">NACA 5-Series</span>
+          <span class="project-tag">Re ~3×10⁶</span>
+          <span class="project-tag">Downforce</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card done">
+      <div class="project-num">04</div>
+      <div class="project-body">
+        <div class="project-meta">
+          <span class="project-status status-done">Completed</span>
+          <span class="project-date">Oct – Nov 2025</span>
+        </div>
+        <div class="project-title">Structural Behaviour of a Thin-Walled Circular Section</div>
+        <ul class="project-points">
+          <li>Fabricated a 6-layer GFRP thin-walled circular tube (L = 0.75 m, t = 4 mm) using hand layup process for structural testing.</li>
+          <li>Predicted theoretical bending deflection of 0.0806 mm under 50 N; validated experimentally within 18% deviation.</li>
+          <li>Experimentally evaluated stress distribution and deformation under applied loading conditions.</li>
+          <li>Computed torsional response (T = 5 Nm) with angular twist of ~0.06° using ANSYS Static Structural.</li>
+          <li>Compared stress and deformation trends between numerical and experimental approaches.</li>
+        </ul>
+        <div class="project-tags">
+          <span class="project-tag">ANSYS Static Structural</span>
+          <span class="project-tag">GFRP Composites</span>
+          <span class="project-tag">Hand Layup</span>
+          <span class="project-tag">FEA Validation</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CO-CURRICULAR -->
+<section id="activities">
+  <div class="sec-head">
+    <span class="sec-tag">// 04</span>
+    <h2 class="sec-title">Co-Curricular <span>Activities</span></h2>
+    <div class="sec-rule"></div>
+  </div>
+  <div class="activities-grid">
+    <div class="activity-card">
+      <div class="activity-icon">🛸</div>
+      <div class="activity-title">Bharatiya Antariksh Hackathon</div>
+      <div class="activity-date">July 2025</div>
+      <div class="activity-desc">Generated a high-resolution lunar Digital Elevation Model (DEM) from Chandrayaan TMC and OHRC datasets. Applied Python image processing workflows and QGIS tools for terrain resolution enhancement and AI-assisted topographical mapping.</div>
+    </div>
+    <div class="activity-card">
+      <div class="activity-icon">🚀</div>
+      <div class="activity-title">NASA AMES Contest & ISDC Conference</div>
+      <div class="activity-date">May 2019 — Washington, D.C.</div>
+      <div class="activity-desc">Designed a conceptual space colony named LEBEN. Presented the design at the International Space Development Conference in Washington, D.C., representing the team on an international stage.</div>
+    </div>
+    <div class="activity-card">
+      <div class="activity-icon">✈️</div>
+      <div class="activity-title">R/C Plane Workshop & Competition</div>
+      <div class="activity-date">October 2024</div>
+      <div class="activity-desc">Designed and built an R/C plane with a team of 5. Used cardboard sheets for fuselage structure, lithium-ion battery for power, and servo-motors for flight control surface actuation.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section id="certifications">
+  <div class="sec-head">
+    <span class="sec-tag">// 05</span>
+    <h2 class="sec-title">Certifi<span>cations</span></h2>
+    <div class="sec-rule"></div>
+  </div>
+  <div class="certs-grid">
+    <div class="cert-card">
+      <div class="cert-icon-wrap">🔩</div>
+      <div class="cert-info">
+        <div class="cert-name">ANSYS Structural Analysis Virtual Internship</div>
+        <div class="cert-date">July – September 2025</div>
+      </div>
+      <span class="cert-badge">Verified</span>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon-wrap">🐍</div>
+      <div class="cert-info">
+        <div class="cert-name">The Complete Python Developer — Udemy</div>
+        <div class="cert-date">April 2024</div>
+      </div>
+      <span class="cert-badge">Verified</span>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon-wrap">🛰️</div>
+      <div class="cert-info">
+        <div class="cert-name">Bharatiya Antariksh Hackathon Participation</div>
+        <div class="cert-date">May 2025</div>
+      </div>
+      <span class="cert-badge">Awarded</span>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="sec-head">
+    <span class="sec-tag">// 06</span>
+    <h2 class="sec-title">Get in <span>Touch</span></h2>
+    <div class="sec-rule"></div>
+  </div>
+  <div class="contact-inner">
+    <p>I'm actively seeking internship opportunities in computational aerodynamics, compressible flow simulation, and physics-based aerodynamic design. Feel free to reach out.</p>
+    <div class="contact-links">
+      <a href="mailto:madireddyavinashreddy@gmail.com" class="contact-link">
+        <span class="icon">✉</span> madireddyavinashreddy@gmail.com
+      </a>
+      <a href="tel:+918328589979" class="contact-link">
+        <span class="icon">📞</span> +91 83285 89979
+      </a>
+      <a href="https://www.linkedin.com/in/avinashreddymadireddy" target="_blank" class="contact-link">
+        <span class="icon">🔗</span> LinkedIn Profile
+      </a>
+    </div>
+    <p style="font-size:13px; color: var(--faint);">Hyderabad, Telangana 501218 · India</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-name">Madireddy Avinash Reddy · Aerospace Engineer</div>
+  <div class="footer-note">SRM Institute of Science &amp; Technology · B.Tech 2027</div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Generate stars
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 180; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = Math.random() * 2 + 0.5;
+    s.style.cssText = `
+      width:${sz}px; height:${sz}px;
+      top:${Math.random()*100}%;
+      left:${Math.random()*100}%;
+      --lo:${(Math.random()*0.2+0.05).toFixed(2)};
+      --hi:${(Math.random()*0.5+0.3).toFixed(2)};
+      --d:${(Math.random()*4+2).toFixed(1)}s;
+      animation-delay:${(Math.random()*4).toFixed(1)}s;
+    `;
+    container.appendChild(s);
+  }
+
+  // Fade-in sections on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { 
