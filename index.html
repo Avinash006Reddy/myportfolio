@@ -44,6 +44,7 @@
     position: absolute;
     border-radius: 50%;
     background: white;
+    will-change: left, top;
     animation: twinkle var(--d,3s) infinite alternate ease-in-out;
   }
   @keyframes twinkle { from { opacity: var(--lo,.1); } to { opacity: var(--hi,.6); } }
@@ -825,10 +826,6 @@
           <div class="stat-lbl">CFD Projects</div>
         </div>
         <div class="stat-card">
-          <div class="stat-val">M3.0</div>
-          <div class="stat-lbl">Max Mach Sim</div>
-        </div>
-        <div class="stat-card">
           <div class="stat-val">3+</div>
           <div class="stat-lbl">Certifications</div>
         </div>
@@ -916,14 +913,6 @@
       <div class="skill-group-title">Programming</div>
       <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">Python</span></div>
       <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">MATLAB</span></div>
-    </div>
-    <div class="skill-group">
-      <div class="skill-group-title">Methods & Analysis</div>
-      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">k–ω SST Turbulence Model</span></div>
-      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">Density-Based Solvers</span></div>
-      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">Mesh Refinement</span></div>
-      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">Shock-Expansion Theory</span></div>
-      <div class="skill-item"><div class="skill-dot"></div><span class="skill-name">Hand Layup (GFRP)</span></div>
     </div>
   </div>
 </section>
@@ -1114,8 +1103,8 @@
   <div class="contact-inner">
     <p>I'm actively seeking internship opportunities in computational aerodynamics, compressible flow simulation, and physics-based aerodynamic design. Feel free to reach out.</p>
     <div class="contact-links">
-      <a href="mailto:madireddyavinashreddy@gmail.com" class="contact-link">
-        <span class="icon">✉</span> madireddyavinashreddy@gmail.com
+      <a href="/cdn-cgi/l/email-protection#e68b87828f948382829f87908f8887958e948382829fa6818b878f8ac885898b" class="contact-link">
+        <span class="icon">✉</span> <span class="__cf_email__" data-cfemail="a3cec2c7cad1c6c7c7dac2d5cacdc2d0cbd1c6c7c7dae3c4cec2cacf8dc0ccce">[email&#160;protected]</span>
       </a>
       <a href="tel:+918328589979" class="contact-link">
         <span class="icon">📞</span> +91 83285 89979
@@ -1134,26 +1123,78 @@
   <div class="footer-note">SRM Institute of Science &amp; Technology · B.Tech 2027</div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-  // Generate stars
+<script>
+  // ── FLOATING STARS ──
   const container = document.getElementById('stars');
-  for (let i = 0; i < 180; i++) {
+  const STAR_COUNT = 260;
+  const stars = [];
+
+  for (let i = 0; i < STAR_COUNT; i++) {
     const s = document.createElement('div');
     s.className = 'star';
-    const sz = Math.random() * 2 + 0.5;
+    const sz = Math.random() * 2.5 + 0.4;
+    const x = Math.random() * 100;
+    const y = Math.random() * 100;
+    // drift speed & direction
+    const dx = (Math.random() - 0.5) * 0.012; // vx in % per frame
+    const dy = (Math.random() - 0.5) * 0.008; // vy in % per frame
+    const lo = (Math.random() * 0.15 + 0.05).toFixed(2);
+    const hi = (Math.random() * 0.55 + 0.35).toFixed(2);
+    const d  = (Math.random() * 5 + 2).toFixed(1);
+    const delay = (Math.random() * 6).toFixed(1);
+
     s.style.cssText = `
       width:${sz}px; height:${sz}px;
-      top:${Math.random()*100}%;
-      left:${Math.random()*100}%;
-      --lo:${(Math.random()*0.2+0.05).toFixed(2)};
-      --hi:${(Math.random()*0.5+0.3).toFixed(2)};
-      --d:${(Math.random()*4+2).toFixed(1)}s;
-      animation-delay:${(Math.random()*4).toFixed(1)}s;
+      top:${y}%; left:${x}%;
+      --lo:${lo}; --hi:${hi};
+      --d:${d}s;
+      animation-delay:${delay}s;
+      box-shadow: 0 0 ${sz * 2}px rgba(180,220,255,0.6);
     `;
     container.appendChild(s);
+    stars.push({ el: s, x, y, dx, dy, sz });
   }
 
-  // Fade-in sections on scroll
+  // Add a few bigger glowing "nebula" stars
+  for (let i = 0; i < 12; i++) {
+    const s = document.createElement('div');
+    const sz = Math.random() * 3 + 2.5;
+    const x = Math.random() * 100;
+    const y = Math.random() * 100;
+    const dx = (Math.random() - 0.5) * 0.006;
+    const dy = (Math.random() - 0.5) * 0.004;
+    const hue = Math.random() > 0.5 ? '190,230,255' : '200,180,255';
+    s.style.cssText = `
+      position:absolute; border-radius:50%;
+      width:${sz}px; height:${sz}px;
+      top:${y}%; left:${x}%;
+      background: white;
+      box-shadow: 0 0 ${sz*4}px 2px rgba(${hue},0.7), 0 0 ${sz*8}px rgba(${hue},0.3);
+      animation: twinkle ${(Math.random()*4+3).toFixed(1)}s ${(Math.random()*4).toFixed(1)}s infinite alternate ease-in-out;
+      --lo:0.4; --hi:1;
+    `;
+    container.appendChild(s);
+    stars.push({ el: s, x, y, dx, dy, sz });
+  }
+
+  // Animate floating drift
+  function drift() {
+    for (const star of stars) {
+      star.x += star.dx;
+      star.y += star.dy;
+      // wrap around edges
+      if (star.x > 101) star.x = -1;
+      if (star.x < -1)  star.x = 101;
+      if (star.y > 101) star.y = -1;
+      if (star.y < -1)  star.y = 101;
+      star.el.style.left = star.x + '%';
+      star.el.style.top  = star.y + '%';
+    }
+    requestAnimationFrame(drift);
+  }
+  requestAnimationFrame(drift);
+
+  // ── SCROLL FADE-IN ──
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
@@ -1161,4 +1202,13 @@
         e.target.style.transform = 'translateY(0)';
       }
     });
-  }, { 
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.project-card, .skill-group, .activity-card, .cert-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(24px)';
+    el.style.transition = 'opacity .6s ease, transform .6s ease';
+    observer.observe(el);
+  });
+</script></body>
+</html>
